@@ -233,7 +233,7 @@ If you're not getting the quality result you want, there may be a few reasons:
 > ```bash
 > pip install transformers accelerate torch
 >
-> pip install git+https://github.com/huggingface/diffusers.git
+> pip install diffusers==0.14.0
 > ```
 > 
 > 2. Load the model and edit the image:
