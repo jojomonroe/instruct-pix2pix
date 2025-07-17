@@ -50,17 +50,17 @@ class EditDataset(Dataset):
 
     def __getitem__(self, i: int) -> dict[str, Any]:
         name, seeds = self.seeds[i]
-        propt_dir = Path(self.path, name)
+        prompt_dir = Path(self.path, name)
         seed = seeds[torch.randint(0, len(seeds), ()).item()]
-        with open(propt_dir.joinpath("prompt.json")) as fp:
+        with open(prompt_dir.joinpath("prompt.json")) as fp:
             prompt = json.load(fp)["edit"]
 
-        image_0 = Image.open(propt_dir.joinpath(f"{seed}_0.jpg"))
-        image_1 = Image.open(propt_dir.joinpath(f"{seed}_1.jpg"))
+        image_0 = Image.open(prompt_dir.joinpath(f"{seed}_0.jpg"))
+        image_1 = Image.open(prompt_dir.joinpath(f"{seed}_1.jpg"))
 
-        reize_res = torch.randint(self.min_resize_res, self.max_resize_res + 1, ()).item()
-        image_0 = image_0.resize((reize_res, reize_res), Image.Resampling.LANCZOS)
-        image_1 = image_1.resize((reize_res, reize_res), Image.Resampling.LANCZOS)
+        resize_res = torch.randint(self.min_resize_res, self.max_resize_res + 1, ()).item()
+        image_0 = image_0.resize((resize_res, resize_res), Image.Resampling.LANCZOS)
+        image_1 = image_1.resize((resize_res, resize_res), Image.Resampling.LANCZOS)
 
         image_0 = rearrange(2 * torch.tensor(np.array(image_0)).float() / 255 - 1, "h w c -> c h w")
         image_1 = rearrange(2 * torch.tensor(np.array(image_1)).float() / 255 - 1, "h w c -> c h w")
@@ -103,18 +103,18 @@ class EditDatasetEval(Dataset):
 
     def __getitem__(self, i: int) -> dict[str, Any]:
         name, seeds = self.seeds[i]
-        propt_dir = Path(self.path, name)
+        prompt_dir = Path(self.path, name)
         seed = seeds[torch.randint(0, len(seeds), ()).item()]
-        with open(propt_dir.joinpath("prompt.json")) as fp:
+        with open(prompt_dir.joinpath("prompt.json")) as fp:
             prompt = json.load(fp)
             edit = prompt["edit"]
             input_prompt = prompt["input"]
             output_prompt = prompt["output"]
 
-        image_0 = Image.open(propt_dir.joinpath(f"{seed}_0.jpg"))
+        image_0 = Image.open(prompt_dir.joinpath(f"{seed}_0.jpg"))
 
-        reize_res = torch.randint(self.res, self.res + 1, ()).item()
-        image_0 = image_0.resize((reize_res, reize_res), Image.Resampling.LANCZOS)
+        resize_res = torch.randint(self.res, self.res + 1, ()).item()
+        image_0 = image_0.resize((resize_res, resize_res), Image.Resampling.LANCZOS)
 
         image_0 = rearrange(2 * torch.tensor(np.array(image_0)).float() / 255 - 1, "h w c -> c h w")
 
